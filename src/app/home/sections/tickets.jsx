@@ -16,11 +16,13 @@ import display from "../../../assets/Koke-web.jpg";
 import { useFlutterwave } from "flutterwave-react-v3";
 import PaymentDetails from "../components/paymentDetails";
 import { generateRandom } from "../../../utls/utils";
-import emailjs from "@emailjs/browser";
 import { db } from "../../../service/firbase";
 import { addDoc, collection } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { Slide } from "react-awesome-reveal";
+import axios from "axios";
+
+const baseURL = "https://koke-emailing.onrender.com/api/send-email";
 
 const Tickets = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +70,6 @@ const Tickets = () => {
   const handleTicket = async (response) => {
     try {
       setLoading(true);
-      console.log(response);
       const passcode = Math.random().toString(36).substring(2, 10);
       const ticket = {
         name: selected.name,
@@ -84,41 +85,25 @@ const Tickets = () => {
         invitation_code: passcode,
         transaction_id: response.flw_ref,
       };
-
-      const emailForm = {
+      const sendEmail = {
         send_to: email,
-        name: name,
-        passcode: passcode,
-        ticket: selected.name,
+        templateType: selected.name,
+        templateData: {
+          fullName: name,
+          passcode,
+        },
       };
-
-      const form = document.createElement("form");
-
-      Object.keys(emailForm).forEach((key) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = emailForm[key];
-        form.appendChild(input);
-      });
-      const result = await emailjs.sendForm(
-        "service_9habpmt",
-        "template_gvv4akt",
-        form,
-        "16RoAxdl74LyfqcYM",
-      );
-
-      if (result.text === "OK") {
-        await addDoc(ticketCollectionRef, data);
-        toast.success("Please Check your email for your ticket!!!");
-        setIsOpen(false);
-      }
+      await axios.post(baseURL, sendEmail);
+      await addDoc(ticketCollectionRef, data);
+      toast.success("Please Check your email for your ticket!!!");
+      setIsOpen(false);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <Box>
       <PaymentDetails
@@ -148,7 +133,7 @@ const Tickets = () => {
             {tickets.map((ticket, idx) => (
               <GridItem key={idx}>
                 <Box bg="#1A1D22" borderRadius={"5px"}>
-                  <Image src={display} alt="koke" />
+                  <Image src={ticket.image} alt="koke" />
                   <Box p="16px">
                     <Text textAlign={"center"} fontWeight={600} fontSize={20}>
                       {ticket.name}

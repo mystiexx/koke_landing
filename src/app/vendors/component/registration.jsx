@@ -12,6 +12,11 @@ import {
 import commaNumber from "comma-number";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { Formik, Form } from "formik";
+import { generateRandom } from "../../../utls/utils";
+import axios from "axios";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../../service/firbase";
+import toast from "react-hot-toast";
 
 const nature = [
   {
@@ -24,12 +29,16 @@ const nature = [
   },
 ];
 
+const baseURL = "https://koke-emailing.onrender.com/api/send-email";
+
 const Registration = () => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
   const [business_nature, setBusinessNature] = useState("");
   const [email, setEmail] = useState("");
   const [business_name, setBusinessName] = useState("");
   const [price, setPrice] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const vendorsCollectionRef = collection(db, "vendors");
 
   let initialValues = {
     email: "",
@@ -58,12 +67,35 @@ const Registration = () => {
 
   const handleFlutterPayment = useFlutterwave(config);
 
-  const handleSubmit = (doc) => {
-    let data = {
-      ...doc,
-      business_nature: business_nature,
-    };
-    console.log(data);
+  const handleSubmit = async (doc, response) => {
+    try {
+      setLoading(true);
+      const passcode = Math.random().toString(36).substring(2, 10);
+      let data = {
+        _id: generateRandom(10),
+        created_at: new Date(),
+        checked_in: false,
+        invitation_code: passcode,
+        transaction_id: response.flw_ref,
+        ...doc,
+        business_nature: business_nature,
+      };
+      const sendEmail = {
+        send_to: data.email,
+        templateType: "Vendor",
+        templateData: {
+          fullName: data.business_name,
+          passcode,
+        },
+      };
+      await axios.post(baseURL, sendEmail);
+      await addDoc(vendorsCollectionRef, data);
+      toast.success("Please check your email!!!!");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBuisnessNature = (doc) => {
@@ -86,8 +118,7 @@ const Registration = () => {
         onSubmit={(values) => {
           handleFlutterPayment({
             callback: (response) => {
-              handleSubmit(values);
-              console.log(response);
+              handleSubmit(values, response);
               closePaymentModal();
             },
             onClose: () => {},
@@ -169,6 +200,7 @@ const Registration = () => {
               w="full"
               mt="24px"
               bg="#FFA630"
+              isLoading={loading}
               _hover={{
                 bg: "#FFA630",
               }}

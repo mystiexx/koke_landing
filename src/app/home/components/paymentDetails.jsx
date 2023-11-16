@@ -54,6 +54,7 @@ const PaymentDetails = ({
             w="full"
             bg="#FFA630"
             isLoading={loading}
+            isDisabled={loading}
             _hover={{
               bg: "#FFA630",
             }}
