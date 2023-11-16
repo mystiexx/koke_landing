@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { tickets } from "../../../utls/enums";
 import commaNumber from "comma-number";
-import display from "../../../assets/koke-web.jpg";
+import display from "../../../assets/Koke-web.jpg";
 import { useFlutterwave } from "flutterwave-react-v3";
 import PaymentDetails from "../components/paymentDetails";
 import { generateRandom } from "../../../utls/utils";
