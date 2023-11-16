@@ -1,0 +1,25 @@
+.container {
+  max-width: 1224px;
+  width: 90%;
+  margin: auto;
+  padding: 40px 0;
+  border: 1px solid red;
+}
+
+.photo_gallery {
+  display: flex;
+  margin-left: -16px;
+  width: auto;
+}
+
+.photo {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.column {
+  padding-left: 16px;
+  background-clip: padding-box;
+}
