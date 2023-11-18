@@ -35,7 +35,9 @@ const PayTicket = () => {
   let initialValues = {
     name: "",
     email: "",
+    phone: "",
     ticket_type: "",
+    quantity: "",
     reference: "",
   };
 
@@ -65,6 +67,7 @@ const PayTicket = () => {
       await addDoc(ticketCollectionRef, data);
       toast.success("Saved!!");
       resetForm();
+      setImage("");
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -124,6 +127,18 @@ const PayTicket = () => {
                 />
               </FormControl>
               <FormControl isRequired>
+                <FormLabel fontSize={14}>Phone Number</FormLabel>
+                <Input
+                  type="text"
+                  value={values.phone}
+                  name={"phone"}
+                  onChange={handleChange}
+                  placeholder="Your Phone Number"
+                  focusBorderColor="#FFA630"
+                  border="1px solid #1A1D22"
+                />
+              </FormControl>
+              <FormControl isRequired>
                 <FormLabel fontSize={14}>Ticket</FormLabel>
                 <Select
                   name="ticket_type"
@@ -139,6 +154,18 @@ const PayTicket = () => {
                     </option>
                   ))}
                 </Select>
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel fontSize={14}>Quantity</FormLabel>
+                <Input
+                  type="text"
+                  value={values.quantity}
+                  name={"quantity"}
+                  onChange={handleChange}
+                  placeholder="0"
+                  focusBorderColor="#FFA630"
+                  border="1px solid #1A1D22"
+                />
               </FormControl>
               <FormControl isRequired>
                 <FormLabel fontSize={14}>

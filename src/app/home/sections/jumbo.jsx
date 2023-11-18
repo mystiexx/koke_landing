@@ -6,9 +6,11 @@ import {
   Container,
   Image,
   useMediaQuery,
+  Button,
 } from "@chakra-ui/react";
 import jumbo from "../../../assets/jumbo.jpg";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Jumbo = () => {
   const targetDate = new Date("2023-12-26T00:00:00");
@@ -153,6 +155,23 @@ const Jumbo = () => {
                     </Text>
                   </Box>
                 </Box>
+              </Center>
+            </Box>
+
+            <Box mt="24px">
+              <Center>
+                <Link to="/tickets">
+                  <Button
+                    bg="#FFA630"
+                    borderRadius={0}
+                    color={"#fff"}
+                    _hover={{
+                      bg: "#FFA630",
+                    }}
+                  >
+                    Buy ticket
+                  </Button>
+                </Link>
               </Center>
             </Box>
           </Box>

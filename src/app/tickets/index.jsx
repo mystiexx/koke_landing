@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../layout";
 import {
   Box,
@@ -21,7 +21,11 @@ import PayTicket from "./components/payTicket";
 
 const Tickets = () => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
-  const [isPaid, setIsPaid] = useState(true);
+  const [isPaid, setIsPaid] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Layout>
@@ -102,13 +106,15 @@ const Tickets = () => {
               <Text mt="10px" textAlign={"center"} fontSize={"14px"}>
                 First, transfer money to the account listed below
                 <br />
-                <span style={{ fontWeight: 600 }}>Bank: Moniepoint</span>
+                <span style={{ fontWeight: 600, color: "#FFA630" }}>
+                  Bank: Moniepoint
+                </span>
                 <br />
-                <span style={{ fontWeight: 600 }}>
+                <span style={{ fontWeight: 600, color: "#FFA630" }}>
                   Account Number: 6428702725
                 </span>
                 <br />
-                <span style={{ fontWeight: 600 }}>
+                <span style={{ fontWeight: 600, color: "#FFA630" }}>
                   Account Name: Koke Empire Nig Ltd.
                 </span>
               </Text>
