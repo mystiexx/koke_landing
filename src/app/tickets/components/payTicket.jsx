@@ -48,7 +48,7 @@ const PayTicket = () => {
         ticket_type: JSON.parse(docs.ticket_type),
         checked_in: false,
         invitation_code: null,
-        create_at: new Date(),
+        created_at: new Date(),
         ticket_sent: false,
         proof: image,
       };
