@@ -23,6 +23,15 @@ const SuccessPage = () => {
             <Text textAlign="center" mt="10px">
               We will be in touch for further instructions
             </Text>
+
+            <Center mt="20px">
+              <a
+                href="https://wa.link/h93nvh"
+                style={{ color: "#128C7E", fontWeight: 700 }}
+              >
+                Chat Admin on Whatsapp
+              </a>
+            </Center>
           </Box>
         </Box>
       </Container>

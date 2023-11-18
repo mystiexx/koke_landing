@@ -55,6 +55,7 @@ const PayTicket = () => {
       const sendEmail = {
         send_to: "kokeempire.ng@gmail.com",
         templateType: "ticketSold",
+        subject: "Ticket Sold!!!",
         templateData: {
           ticket: data.ticket_type.name,
           fullname: name,

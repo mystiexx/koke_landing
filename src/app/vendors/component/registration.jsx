@@ -59,6 +59,7 @@ const Registration = () => {
       const sendEmail = {
         send_to: "kokeempire.ng@gmail.com",
         templateType: "ticketSold",
+        subject: "New Vendor!!!!",
         templateData: {
           ticket: data.business_nature.name,
           fullname: data.business_name,
