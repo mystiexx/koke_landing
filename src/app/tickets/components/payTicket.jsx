@@ -44,27 +44,39 @@ const PayTicket = () => {
   const handleSubmit = async (docs, { resetForm }) => {
     try {
       setLoading(true);
-      const data = {
-        _id: generateRandom(10),
-        ...docs,
-        ticket_type: JSON.parse(docs.ticket_type),
-        checked_in: false,
-        invitation_code: null,
-        created_at: new Date(),
-        ticket_sent: false,
-        proof: image,
-      };
+      const dataArray = [];
+      const ref = Math.random()
+        .toString(36)
+        .substring(2, 5 + 2);
+      for (let i = 0; i < docs.quantity; i++) {
+        const data = {
+          _id: generateRandom(10),
+          ...docs,
+          ticket_type: JSON.parse(docs.ticket_type),
+          checked_in: false,
+          invitation_code: null,
+          created_at: new Date(),
+          ticket_sent: false,
+          proof: image,
+          ref: ref,
+        };
+        dataArray.push(data);
+      }
+
       const sendEmail = {
         send_to: "kokeempire.ng@gmail.com",
         templateType: "ticketSold",
         subject: "Ticket Sold!!!",
         templateData: {
-          ticket: data.ticket_type.name,
-          fullname: name,
+          ticket: docs.ticket_type.name,
+          fullname: docs.name,
+          quantity: docs.quantity,
         },
       };
       await axios.post(baseUrl, sendEmail);
-      await addDoc(ticketCollectionRef, data);
+      for (const entry of dataArray) {
+        await addDoc(ticketCollectionRef, entry);
+      }
       toast.success("Saved!!");
       resetForm();
       setImage("");
