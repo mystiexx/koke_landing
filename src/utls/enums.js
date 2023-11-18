@@ -68,24 +68,17 @@ import {
   gallery_67,
   gallery_68,
 } from "../assets/gallery";
-import regular from "../assets/Koke-web.jpg";
-import vip from "../assets/VIP_tickets.jpg";
-import trybe from "../assets/trybe_tickets.jpg";
-
 export const tickets = [
   {
     name: "Regular",
-    image: regular,
     price: 2000,
   },
   {
     name: "VIP",
-    image: vip,
     price: 10000,
   },
   {
     name: "Trybe Table",
-    image: trybe,
     price: 50000,
   },
 ];

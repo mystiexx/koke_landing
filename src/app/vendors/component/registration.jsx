@@ -10,13 +10,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 import commaNumber from "comma-number";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { Formik, Form } from "formik";
 import { generateRandom } from "../../../utls/utils";
-import axios from "axios";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../service/firbase";
-import toast from "react-hot-toast";
+import axios from "axios";
 
 const nature = [
   {
@@ -34,9 +32,6 @@ const baseURL = "https://koke-emailing.onrender.com/api/send-email";
 const Registration = () => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
   const [business_nature, setBusinessNature] = useState("");
-  const [email, setEmail] = useState("");
-  const [business_name, setBusinessName] = useState("");
-  const [price, setPrice] = useState(0);
   const [loading, setLoading] = useState(false);
   const vendorsCollectionRef = collection(db, "vendors");
 
@@ -45,52 +40,33 @@ const Registration = () => {
     business_name: "",
     business_nature: "",
     phone: "",
-    social_media: "",
+    instagram: "",
   };
 
-  const config = {
-    public_key: import.meta.env.VITE_FLUTTER_KEY,
-    tx_ref: Date.now(),
-    amount: price,
-    currency: "NGN",
-    payment_options: "card,mobilemoney,ussd",
-    customer: {
-      email: email,
-      name: business_name,
-    },
-    customizations: {
-      title: "Koke Xperience Vendor",
-      description: `Payment for Vendor `,
-      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
-    },
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
-
-  const handleSubmit = async (doc, response) => {
+  const handleSubmit = async (doc) => {
     try {
       setLoading(true);
-      const passcode = Math.random().toString(36).substring(2, 10);
       let data = {
         _id: generateRandom(10),
         created_at: new Date(),
         checked_in: false,
-        invitation_code: passcode,
-        transaction_id: response.flw_ref,
+        ticket_sent: false,
+        invitation_code: null,
+        paid: false,
         ...doc,
         business_nature: business_nature,
       };
       const sendEmail = {
-        send_to: data.email,
-        templateType: "Vendor",
+        send_to: "kokeempire.ng@gmail.com",
+        templateType: "ticketSold",
         templateData: {
-          fullName: data.business_name,
-          passcode,
+          ticket: data.business_nature.name,
+          fullname: data.business_name,
         },
       };
-      await axios.post(baseURL, sendEmail);
-      await addDoc(vendorsCollectionRef, data);
-      toast.success("Please check your email!!!!");
+      await axios.post(baseURL, sendEmail),
+        await addDoc(vendorsCollectionRef, data);
+      window.location.href = "/success";
     } catch (err) {
       console.log(err);
     } finally {
@@ -101,7 +77,6 @@ const Registration = () => {
   const handleBuisnessNature = (doc) => {
     let result = JSON.parse(doc);
     setBusinessNature(result);
-    setPrice(result.price);
   };
   return (
     <Box w={isLargerThan800 ? "500px" : "auto"}>
@@ -113,18 +88,7 @@ const Registration = () => {
       >
         D'KOKE XPERIENCE Vendors Registration
       </Text>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values) => {
-          handleFlutterPayment({
-            callback: (response) => {
-              handleSubmit(values, response);
-              closePaymentModal();
-            },
-            onClose: () => {},
-          });
-        }}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ handleChange, setFieldValue }) => (
           <Form>
             <Box display={"flex"} flexDir={"column"} gap="24px">
@@ -135,7 +99,6 @@ const Registration = () => {
                   name={"email"}
                   onChange={(e) => {
                     setFieldValue("email", e.target.value);
-                    setEmail(e.target.value);
                   }}
                   placeholder="Your Email"
                   focusBorderColor="#FFA630"
@@ -149,7 +112,6 @@ const Registration = () => {
                   name="business_name"
                   onChange={(e) => {
                     setFieldValue("business_name", e.target.value);
-                    setBusinessName(e.target.value);
                   }}
                   placeholder="Your Business Name"
                   focusBorderColor="#FFA630"
@@ -184,12 +146,12 @@ const Registration = () => {
                 />
               </FormControl>
               <FormControl isRequired>
-                <FormLabel fontSize={14}>Social Media Handle</FormLabel>
+                <FormLabel fontSize={14}>Instagram Handle</FormLabel>
                 <Input
                   type="text"
-                  name="social_media"
+                  name="instagram"
                   onChange={handleChange}
-                  placeholder="Your Socail Media Handle"
+                  placeholder="Your Instagram Handle"
                   focusBorderColor="#FFA630"
                   border="1px solid #1A1D22"
                 />

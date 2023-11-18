@@ -8,18 +8,19 @@ import {
   Image,
   useMediaQuery,
 } from "@chakra-ui/react";
-import koke from "../../../assets/koke-logo.jpg";
+import koke from "../../../assets/legacy.png";
 import { Slide } from "react-awesome-reveal";
 
 const Overview = () => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
   return (
-    <Box bg="#1A1D22">
+    <Box>
       <Container maxW="container.xl" py="100px">
         <Grid
           templateColumns={isLargerThan800 ? "repeat(2,1fr)" : "auto"}
           gap="24px"
+          alignItems={"center"}
         >
           <GridItem>
             <Slide direction="up" triggerOnce>

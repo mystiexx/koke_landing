@@ -9,7 +9,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import styles from "./styles.module.css";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/new_logo.png";
 import Mobile from "./mobile";
 import { FiMenu } from "react-icons/fi";
 
@@ -21,6 +21,10 @@ const NavBar = () => {
     {
       name: "Home",
       to: "/",
+    },
+    {
+      name: "Tickets",
+      to: "/tickets",
     },
     {
       name: "Vendors",
@@ -49,7 +53,7 @@ const NavBar = () => {
         justifyContent={"space-between"}
         py="25px"
       >
-        <Image src={logo} alt="logo" h="60px" objectFit={"cover"} />
+        <Image src={logo} alt="logo" h="90px" objectFit={"cover"} />
 
         <IconButton
           icon={<FiMenu />}

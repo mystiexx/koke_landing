@@ -1,163 +1,66 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Container,
   Text,
-  Button,
   Grid,
+  useMediaQuery,
   GridItem,
   Image,
-  Center,
-  useMediaQuery,
+  Button,
 } from "@chakra-ui/react";
-import { tickets } from "../../../utls/enums";
 import commaNumber from "comma-number";
-import display from "../../../assets/Koke-web.jpg";
-import { useFlutterwave } from "flutterwave-react-v3";
-import PaymentDetails from "../components/paymentDetails";
-import { generateRandom } from "../../../utls/utils";
-import { db } from "../../../service/firbase";
-import { addDoc, collection } from "firebase/firestore";
-import toast from "react-hot-toast";
 import { Slide } from "react-awesome-reveal";
-import axios from "axios";
-
-const baseURL = "https://koke-emailing.onrender.com/api/send-email";
+import koke from "../../../assets/Koke-web.jpg";
+import { IoTicketOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Tickets = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [selected, setSelected] = useState({});
-  const [price, setPrice] = useState(0);
-  const ticketCollectionRef = collection(db, "tickets");
-  const [loading, setLoading] = useState(false);
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
-
-  const config = {
-    public_key: import.meta.env.VITE_FLUTTER_KEY,
-    tx_ref: Date.now(),
-    amount: price,
-    currency: "NGN",
-    payment_options: "card,mobilemoney,ussd",
-    customer: {
-      email: email,
-      name: name,
-    },
-    customizations: {
-      title: "Koke Xperience",
-      description: `Payment for ${selected.name} ticket `,
-      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
-    },
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
-
-  const handleName = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleSelected = (doc) => {
-    setSelected(doc);
-    setPrice(doc.price);
-    setIsOpen(true);
-  };
-
-  const handleTicket = async (response) => {
-    try {
-      setLoading(true);
-      const passcode = Math.random().toString(36).substring(2, 10);
-      const ticket = {
-        name: selected.name,
-        price: selected.price,
-      };
-      const data = {
-        _id: generateRandom(10),
-        ticket_type: ticket,
-        created_at: new Date(),
-        name: name,
-        email: email,
-        checked_in: false,
-        invitation_code: passcode,
-        transaction_id: response.flw_ref,
-      };
-      const sendEmail = {
-        send_to: email,
-        templateType: selected.name,
-        templateData: {
-          fullName: name,
-          passcode,
-        },
-      };
-      await axios.post(baseURL, sendEmail);
-      await addDoc(ticketCollectionRef, data);
-      toast.success("Please Check your email for your ticket!!!");
-      setIsOpen(false);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <Box>
-      <PaymentDetails
-        isOpen={isOpen}
-        onClose={() => setIsOpen(!isOpen)}
-        handleName={handleName}
-        handleEmail={handleEmail}
-        selected={selected}
-        handleFlutterPayment={handleFlutterPayment}
-        handleTicket={handleTicket}
-        loading={loading}
-      />
       <Container maxW={"container.xl"} py="100px">
-        <Text textAlign="center" fontFamily={"Luckiest Guy"} fontSize={"40px"}>
-          Tickets
-        </Text>
-
-        <Text textAlign={"center"} mb="40px">
-          Tickets will be sold at the gate for NGN{commaNumber(3000)}
-        </Text>
-
         <Grid
-          templateColumns={isLargerThan800 ? "repeat(3, 1fr)" : "auto"}
+          templateColumns={isLargerThan800 ? "repeat(2, 1fr)" : "auto"}
           gap="24px"
         >
           <Slide direction="up" cascade triggerOnce>
-            {tickets.map((ticket, idx) => (
-              <GridItem key={idx}>
-                <Box bg="#1A1D22" borderRadius={"5px"}>
-                  <Image src={ticket.image} alt="koke" />
-                  <Box p="16px">
-                    <Text textAlign={"center"} fontWeight={600} fontSize={20}>
-                      {ticket.name}
-                    </Text>
-                    <Text textAlign={"center"}>
-                      NGN{commaNumber(ticket.price)}
-                    </Text>
+            <GridItem>
+              <Image src={koke} alt="koke" />
+            </GridItem>
 
-                    <Center>
-                      <Button
-                        mt="24px"
-                        bg="#FFA630"
-                        _hover={{
-                          bg: "#FFA630",
-                        }}
-                        onClick={() => handleSelected(ticket)}
-                      >
-                        Buy Ticket
-                      </Button>
-                    </Center>
-                  </Box>
-                </Box>
-              </GridItem>
-            ))}
+            <GridItem>
+              <Text fontFamily={"Luckiest Guy"} fontSize={"50px"}>
+                RESERVE YOUR SPOT
+              </Text>
+              <Text>
+                Reserve your spot at the D'KOKE XPERIENCE today! Enjoy the peak
+                of entertainment with live music and enjoying the company of
+                friends and family. Buy your tickets now so you don't miss out
+                on this incredible event.
+              </Text>
+
+              <Link to="/tickets">
+                <Button
+                  leftIcon={<IoTicketOutline />}
+                  mt="24px"
+                  bg="#FFA630"
+                  color="#fff"
+                  borderRadius={0}
+                  _hover={{
+                    bg: "#FFA630",
+                  }}
+                >
+                  Buy Ticket
+                </Button>
+              </Link>
+
+              <br />
+              <Text textAlign={"left"} mt="40px">
+                Tickets will be sold at the gate for NGN{commaNumber(3000)}
+              </Text>
+            </GridItem>
           </Slide>
         </Grid>
       </Container>

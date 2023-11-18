@@ -9,6 +9,8 @@ import Home from "./app/home";
 import { Toaster } from "react-hot-toast";
 import GalleryPage from "./app/gallery";
 import Vendors from "./app/vendors";
+import Tickets from "./app/tickets";
+import SuccessPage from "./app/success";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/gallery" element={<GalleryPage />} />
         <Route exact path="/vendors" element={<Vendors />} />
+        <Route exact path="/tickets" element={<Tickets />} />
+        <Route exact path="/success" element={<SuccessPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
