@@ -77,7 +77,7 @@ const PayTicket = () => {
       for (const entry of dataArray) {
         await addDoc(ticketCollectionRef, entry);
       }
-      toast.success("Saved!!");
+      window.location.href = "/success";
       resetForm();
       setImage("");
     } catch (err) {

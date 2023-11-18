@@ -146,7 +146,7 @@ const Registration = () => {
                   border="1px solid #1A1D22"
                 />
               </FormControl>
-              <FormControl isRequired>
+              <FormControl>
                 <FormLabel fontSize={14}>Instagram Handle</FormLabel>
                 <Input
                   type="text"
