@@ -48,6 +48,7 @@ const PayTicket = () => {
       const ref = Math.random()
         .toString(36)
         .substring(2, 5 + 2);
+      const quantityPerItem = Math.ceil(docs.quantity / docs.quantity);
       for (let i = 0; i < docs.quantity; i++) {
         const data = {
           _id: generateRandom(10),
@@ -56,6 +57,7 @@ const PayTicket = () => {
           checked_in: false,
           invitation_code: null,
           created_at: new Date(),
+          quantity: quantityPerItem,
           ticket_sent: false,
           proof: image,
           ref: ref,
@@ -73,13 +75,15 @@ const PayTicket = () => {
           quantity: docs.quantity,
         },
       };
-      await axios.post(baseUrl, sendEmail);
-      for (const entry of dataArray) {
-        await addDoc(ticketCollectionRef, entry);
+      const { data } = await axios.post(baseUrl, sendEmail);
+      if (data.status === 200) {
+        for (const entry of dataArray) {
+          await addDoc(ticketCollectionRef, entry);
+        }
+        window.location.href = "/ticket-success";
+        resetForm();
+        setImage("");
       }
-      window.location.href = "/success";
-      resetForm();
-      setImage("");
     } catch (err) {
       toast.error(err.message);
     } finally {

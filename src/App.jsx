@@ -10,7 +10,7 @@ import { Toaster } from "react-hot-toast";
 import GalleryPage from "./app/gallery";
 import Vendors from "./app/vendors";
 import Tickets from "./app/tickets";
-import SuccessPage from "./app/success";
+import SuccessPage, { TicketSuccess } from "./app/success";
 
 const App = () => {
   return (
@@ -22,6 +22,7 @@ const App = () => {
         <Route exact path="/vendors" element={<Vendors />} />
         <Route exact path="/tickets" element={<Tickets />} />
         <Route exact path="/success" element={<SuccessPage />} />
+        <Route exact path="/ticket-success" element={<TicketSuccess />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
