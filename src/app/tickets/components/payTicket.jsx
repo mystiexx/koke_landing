@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import { FileUploadToCloud } from "../../../service/fileupload";
 import { RiImageAddFill } from "react-icons/ri";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const baseUrl = "https://koke-emailing.onrender.com/api/send-email";
 
@@ -31,6 +32,7 @@ const PayTicket = () => {
   const [image, setImage] = useState("");
   const imageRef = useRef();
   const [uploading, setUploading] = useState(false);
+  const navigate = useNavigate();
 
   let initialValues = {
     name: "",
@@ -80,7 +82,7 @@ const PayTicket = () => {
         for (const entry of dataArray) {
           await addDoc(ticketCollectionRef, entry);
         }
-        window.location.href = "/ticket-success";
+        navigate("/ticket-success");
         resetForm();
         setImage("");
       }

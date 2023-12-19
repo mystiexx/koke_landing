@@ -15,6 +15,7 @@ import { generateRandom } from "../../../utls/utils";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../service/firbase";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const nature = [
   {
@@ -34,6 +35,7 @@ const Registration = () => {
   const [business_nature, setBusinessNature] = useState("");
   const [loading, setLoading] = useState(false);
   const vendorsCollectionRef = collection(db, "vendors");
+  const navigate = useNavigate();
 
   let initialValues = {
     email: "",
@@ -67,7 +69,7 @@ const Registration = () => {
       };
       await axios.post(baseURL, sendEmail),
         await addDoc(vendorsCollectionRef, data);
-      window.location.href = "/success";
+      navigate("/success");
     } catch (err) {
       console.log(err);
     } finally {
